@@ -6,9 +6,7 @@ import { mkdir } from "fs/promises";
 
 const require = createRequire(import.meta.url);
 const playwrightRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "route-runner");
-const { chromium } = await import(
-  pathToFileURL(require.resolve("playwright", { paths: [playwrightRoot] })).href
-);
+const { chromium } = require(require.resolve("playwright", { paths: [playwrightRoot] }));
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const SERVICE_NAME = "dablabs-store";
