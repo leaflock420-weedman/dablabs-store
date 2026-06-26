@@ -10,10 +10,10 @@ services:
       - key: NODE_VERSION
         value: "20"
       - key: PAYPAL_MODE
-        value: sandbox
-      - key: PAYPAL_SANDBOX_CLIENT_ID
-        sync: false
-      - key: PAYPAL_SANDBOX_CLIENT_SECRET
+        value: live
+      - key: PAYPAL_LIVE_CLIENT_ID
+        value: AcG3TjAOGC4A_M9qKl6pSJFWMjqkbFDnuaFbXZFPs5V88ZtWfEoqa1tlg08y8t6FzRte_a3XghgmHIOJ
+      - key: PAYPAL_LIVE_CLIENT_SECRET
         sync: false
       - key: STORE_EMAIL
         value: hello@dablabs.com.au
