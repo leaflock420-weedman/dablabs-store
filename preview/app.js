@@ -313,25 +313,37 @@
     badge.className = `checkout__mode-badge checkout__mode-badge--${config.mode}`;
   }
 
+  let paypalCheckoutReady = false;
+
   function initCheckoutPayPal() {
     const container = $('#paypalButtonContainer');
     const legacyBtn = $('#paypalPayBtn');
     const warn = $('#paypalConfigWarn');
     if (legacyBtn) legacyBtn.hidden = true;
-    if (warn) {
-      warn.hidden = false;
-      warn.textContent = 'Start the checkout server: npm install && npm start — then open http://localhost:3000';
-    }
+    if (!container || !cart.length) return;
 
     window.DabLabsPayPal?.init({
       apiBase: getApiBase(),
       container,
-      getOrderPayload: buildOrderPayload,
+      getOrderPayload: () => {
+        persistCheckoutForm();
+        return buildOrderPayload();
+      },
       onValidate: () => {
-        if (!cart.length) return false;
-        return validateCheckoutForm();
+        if (!cart.length) {
+          if (warn) { warn.hidden = false; warn.textContent = 'Your cart is empty.'; }
+          return false;
+        }
+        const valid = validateCheckoutForm();
+        if (!valid && warn) {
+          warn.hidden = false;
+          warn.textContent = 'Please complete all required fields (email, phone, address).';
+        }
+        return valid;
       },
       onSuccess: (result) => {
+        paypalCheckoutReady = false;
+        if (warn) warn.hidden = true;
         const order = result.order || { id: result.orderId, status: 'paid' };
         saveOrder({ ...order, status: 'paid' });
         cart = [];
@@ -339,14 +351,17 @@
         showCheckoutSuccess(order, result.captureId);
       },
       onError: (msg) => {
-        if (warn) {
+        if (warn && msg) {
           warn.hidden = false;
           warn.textContent = msg;
         }
       },
     }).then(() => {
       const cfg = window.DabLabsPayPal?.getConfig?.();
-      if (cfg?.configured && warn) warn.hidden = true;
+      if (cfg?.configured) {
+        paypalCheckoutReady = true;
+        if (warn) warn.hidden = true;
+      }
       updateModeBadge(cfg);
     });
   }
@@ -374,6 +389,7 @@
     $('#checkoutMain').hidden = false;
     $('#checkoutPending').hidden = true;
     $('#checkoutSuccess').hidden = true;
+    paypalCheckoutReady = false;
     window.DabLabsPayPal?.reset($('#paypalButtonContainer'));
   }
 

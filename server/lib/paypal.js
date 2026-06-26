@@ -110,8 +110,9 @@ function money(value) {
 
 function buildPurchaseUnit(order) {
   const currency = order.currency || 'AUD';
-  const itemTotal = order.items.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = order.shipping || 0;
+  const itemTotal = order.items.reduce((s, i) => s + Number(i.price) * Number(i.qty), 0);
+  const shipping = Number(order.shipping) || 0;
+  const total = Math.round((itemTotal + shipping) * 100) / 100;
 
   return {
     reference_id: order.id,
@@ -120,7 +121,7 @@ function buildPurchaseUnit(order) {
     soft_descriptor: 'DABLABS',
     amount: {
       currency_code: currency,
-      value: money(order.total),
+      value: money(total),
       breakdown: {
         item_total: { currency_code: currency, value: money(itemTotal) },
         shipping: { currency_code: currency, value: money(shipping) },
@@ -152,10 +153,9 @@ async function createPayPalOrder(order) {
     purchase_units: [buildPurchaseUnit(order)],
     application_context: {
       brand_name: 'Dab Labs',
+      landing_page: 'LOGIN',
       shipping_preference: 'SET_PROVIDED_ADDRESS',
       user_action: 'PAY_NOW',
-      return_url: `${order.returnUrl || ''}`,
-      cancel_url: `${order.cancelUrl || ''}`,
     },
   };
 
