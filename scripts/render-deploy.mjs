@@ -1,8 +1,14 @@
-import { chromium } from "playwright";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
+import { createRequire } from "module";
 import { existsSync, readFileSync } from "fs";
 import { mkdir } from "fs/promises";
+
+const require = createRequire(import.meta.url);
+const playwrightRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "route-runner");
+const { chromium } = await import(
+  pathToFileURL(require.resolve("playwright", { paths: [playwrightRoot] })).href
+);
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const SERVICE_NAME = "dablabs-store";
