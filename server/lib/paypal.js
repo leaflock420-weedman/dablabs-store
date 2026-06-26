@@ -150,7 +150,6 @@ function buildPurchaseUnit(order) {
 async function createPayPalOrder(order) {
   const body = {
     intent: 'CAPTURE',
-    processing_instruction: 'ORDER_COMPLETE_ON_PAYMENT_APPROVAL',
     purchase_units: [buildPurchaseUnit(order)],
     application_context: {
       brand_name: 'Dab Labs',
@@ -158,6 +157,7 @@ async function createPayPalOrder(order) {
       shipping_preference: 'SET_PROVIDED_ADDRESS',
       user_action: 'PAY_NOW',
       payment_method: {
+        payer_selected: 'PAYPAL',
         payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED',
       },
     },

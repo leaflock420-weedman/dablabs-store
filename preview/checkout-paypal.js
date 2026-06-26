@@ -19,7 +19,7 @@ window.DabLabsPayPal = (() => {
   }
 
   function loadSdk(config) {
-    const nextKey = `${config.sdkBase}|${config.clientId}|paypal-only`;
+    const nextKey = `${config.sdkBase}|${config.clientId}|paypal-wallet-only`;
     if (sdkPromise && sdkKey === nextKey) return sdkPromise;
 
     document.querySelectorAll('script[src*="paypal.com/sdk/js"]').forEach((node) => node.remove());
@@ -32,6 +32,7 @@ window.DabLabsPayPal = (() => {
         'client-id': config.clientId,
         currency: config.currency || 'AUD',
         intent: 'capture',
+        commit: 'true',
         components: 'buttons',
         'disable-funding': 'card,credit,paylater,venmo,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort',
       });
@@ -107,7 +108,7 @@ window.DabLabsPayPal = (() => {
           return data.id;
         },
         onApprove: async (data) => {
-          container.innerHTML = '<p class="checkout__paypal-loading">Payment approved — finishing instantly…</p>';
+          container.innerHTML = '<p class="checkout__paypal-loading">Payment approved — completing now…</p>';
           const res = await fetch(`${apiBase}/api/paypal/capture-order`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

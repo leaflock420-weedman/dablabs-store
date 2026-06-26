@@ -460,7 +460,7 @@
     setupCheckoutFormListeners();
     updateCheckoutPayState();
     if (isRestPayPal()) {
-      $('#checkoutSecureNote').textContent = 'Pay with PayPal · Secure checkout · AUD';
+      $('#checkoutSecureNote').textContent = 'PayPal balance or linked bank only · No guest card · AUD';
       initCheckoutPayPal();
     }
   }
