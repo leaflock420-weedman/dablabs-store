@@ -235,12 +235,12 @@
     if (gateMsg && !ready && result.missing.length) {
       gateMsg.textContent = `Complete: ${result.missing.join(', ')}`;
     } else if (gateMsg) {
-      gateMsg.textContent = 'Complete your details above to unlock payment.';
+      gateMsg.textContent = 'Complete your details above to unlock PayPal.';
     }
     if (hint) {
       hint.textContent = ready
-        ? 'You\'re all set — pay with PayPal or debit/credit card below.'
-        : 'Fill in your details above, then pay with PayPal or card.';
+        ? 'You\'re all set — click PayPal below to pay securely.'
+        : 'Fill in your details above, then pay with PayPal.';
     }
     return result;
   }
@@ -460,7 +460,7 @@
     setupCheckoutFormListeners();
     updateCheckoutPayState();
     if (isRestPayPal()) {
-      $('#checkoutSecureNote').textContent = 'PayPal or debit/credit card · Secure checkout · AUD';
+      $('#checkoutSecureNote').textContent = 'Pay with PayPal · Secure checkout · AUD';
       initCheckoutPayPal();
     }
   }

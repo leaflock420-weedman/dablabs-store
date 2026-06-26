@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260626-card">
+  <link rel="stylesheet" href="styles.css?v=20260626-paypal">
 </head>
 <body>
 
@@ -230,18 +230,15 @@
           </section>
           <section class="checkout__section checkout__pay" id="checkoutPaySection">
             <h2>Payment</h2>
-            <p class="checkout__pay-hint" id="checkoutPayHint">Fill in your details above, then pay with PayPal or card.</p>
+            <p class="checkout__pay-hint" id="checkoutPayHint">Fill in your details above, then pay with PayPal.</p>
             <div id="paypalModeBadge" class="checkout__mode-badge" hidden></div>
             <div class="checkout__paypal-wrap">
               <div id="paypalGate" class="checkout__paypal-gate" aria-hidden="true">
-                <p id="paypalGateMsg">Complete your details above to unlock payment.</p>
+                <p id="paypalGateMsg">Complete your details above to unlock PayPal.</p>
               </div>
               <div id="paypalButtonContainer" class="checkout__paypal-buttons"></div>
             </div>
-            <button type="submit" class="btn btn--paypal btn--full" id="paypalPayBtn" hidden>
-              Pay with PayPal
-            </button>
-            <p class="checkout__secure" id="checkoutSecureNote">PayPal or debit/credit card · Secure checkout · AUD</p>
+            <p class="checkout__secure" id="checkoutSecureNote">Pay with PayPal · Secure checkout · AUD</p>
             <p class="checkout__config-warn" id="paypalConfigWarn" hidden></p>
           </section>
         </form>
@@ -304,9 +301,7 @@
       </div>
       <p class="cart-note">Secure PayPal checkout · Ships from AU</p>
       <button class="btn btn--lime btn--full" id="checkoutBtn" type="button">Check out</button>
-      <div class="cart-payments">
-        <span class="pay paypal">PayPal</span>
-      </div>
+
     </div>
   </aside>
 
@@ -363,10 +358,7 @@
       </div>
 
       <div class="footer__badges">
-        <span class="footer__badge">Afterpay</span>
-        <span class="footer__badge footer__badge--zip">Zip</span>
-        <span class="footer__badge">Shop Pay</span>
-        <span class="footer__badge">Apple Pay</span>
+        <span class="footer__badge">PayPal</span>
         <span class="footer__badge footer__badge--au">🇦🇺 Shipped from AU</span>
         <span class="footer__badge footer__badge--free">Free ship $100+</span>
       </div>
@@ -381,8 +373,8 @@
 
   <script src="products-data.js"></script>
   <script src="checkout-config.js"></script>
-  <script src="checkout-paypal.js?v=20260626-card"></script>
-  <script src="effects.js?v=20260626-card"></script>
-  <script src="app.js?v=20260626-card"></script>
+  <script src="checkout-paypal.js?v=20260626-paypal"></script>
+  <script src="effects.js?v=20260626-paypal"></script>
+  <script src="app.js?v=20260626-paypal"></script>
 </body>
 </html>
