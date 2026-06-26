@@ -1,7 +1,7 @@
-/* PayPal REST checkout — PayPal wallet only */
+/* PayPal REST checkout — PayPal wallet + debit/credit card */
 window.DabLabsPayPal = (() => {
   let sdkPromise = null;
-  let buttonInstance = null;
+  let buttonInstances = [];
   let publicConfig = null;
   let initToken = 0;
 
@@ -27,7 +27,8 @@ window.DabLabsPayPal = (() => {
         currency: config.currency || 'AUD',
         intent: 'capture',
         components: 'buttons',
-        'disable-funding': 'card,credit,paylater,venmo,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort',
+        'enable-funding': 'card',
+        'disable-funding': 'paylater,venmo,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort',
       });
       const script = document.createElement('script');
       script.src = `${config.sdkBase}?${params}`;
@@ -41,10 +42,10 @@ window.DabLabsPayPal = (() => {
   }
 
   function destroyButton() {
-    if (buttonInstance) {
-      try { buttonInstance.close(); } catch { /* ignore */ }
-      buttonInstance = null;
-    }
+    buttonInstances.forEach((btn) => {
+      try { btn.close(); } catch { /* ignore */ }
+    });
+    buttonInstances = [];
   }
 
   async function init({
@@ -125,23 +126,29 @@ window.DabLabsPayPal = (() => {
           if (!/please complete/i.test(msg)) onError?.(msg);
         },
         onCancel: () => {
-          onError?.('Payment cancelled — click PayPal when you\'re ready to pay.');
+          onError?.('Payment cancelled — choose PayPal or Pay with card when you\'re ready.');
         },
       };
 
-      const btn = paypal.Buttons({
-        ...handlers,
-        fundingSource: paypal.FUNDING.PAYPAL,
-        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal', height: 48 },
-      });
+      const buttonStyle = { layout: 'vertical', shape: 'rect', height: 48 };
+      const sources = [
+        { source: paypal.FUNDING.PAYPAL, style: { ...buttonStyle, color: 'gold', label: 'paypal' } },
+        { source: paypal.FUNDING.CARD, style: { ...buttonStyle, color: 'black', label: 'pay' } },
+      ];
 
-      if (!btn.isEligible()) {
+      let rendered = 0;
+      for (const { source, style } of sources) {
+        const btn = paypal.Buttons({ ...handlers, fundingSource: source, style });
+        if (!btn.isEligible()) continue;
+        await btn.render(container);
+        buttonInstances.push(btn);
+        rendered += 1;
+      }
+
+      if (!rendered) {
         container.innerHTML = '<p class="checkout__config-warn">PayPal checkout is not available in this browser. Try Chrome or Safari.</p>';
         return;
       }
-
-      await btn.render(container);
-      buttonInstance = btn;
     } catch (err) {
       if (token !== initToken) return;
       container.innerHTML = `<p class="checkout__config-warn">${err.message}</p>`;
