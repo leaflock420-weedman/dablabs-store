@@ -19,7 +19,13 @@ const PORT = Number(process.env.PORT) || 3000;
 const PREVIEW_DIR = path.join(__dirname, '..', 'preview');
 
 app.use(express.json({ limit: '1mb' }));
-app.use(express.static(PREVIEW_DIR));
+app.use(express.static(PREVIEW_DIR, {
+  setHeaders(res, filePath) {
+    if (/\.(html|js|css)$/.test(filePath)) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 function generateOrderId() {
   return `DL-${Date.now().toString(36).toUpperCase()}`;

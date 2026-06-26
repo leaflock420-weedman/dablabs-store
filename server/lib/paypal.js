@@ -153,7 +153,7 @@ async function createPayPalOrder(order) {
     purchase_units: [buildPurchaseUnit(order)],
     application_context: {
       brand_name: 'Dab Labs',
-      landing_page: 'NO_PREFERENCE',
+      landing_page: 'BILLING',
       shipping_preference: 'SET_PROVIDED_ADDRESS',
       user_action: 'PAY_NOW',
     },

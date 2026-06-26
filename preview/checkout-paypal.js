@@ -1,6 +1,7 @@
 /* PayPal REST checkout — PayPal wallet + debit/credit card */
 window.DabLabsPayPal = (() => {
   let sdkPromise = null;
+  let sdkKey = '';
   let buttonInstances = [];
   let publicConfig = null;
   let initToken = 0;
@@ -18,8 +19,13 @@ window.DabLabsPayPal = (() => {
   }
 
   function loadSdk(config) {
-    if (window.paypal) return Promise.resolve(window.paypal);
-    if (sdkPromise) return sdkPromise;
+    const nextKey = `${config.sdkBase}|${config.clientId}|card`;
+    if (sdkPromise && sdkKey === nextKey) return sdkPromise;
+
+    document.querySelectorAll('script[src*="paypal.com/sdk/js"]').forEach((node) => node.remove());
+    delete window.paypal;
+    sdkPromise = null;
+    sdkKey = nextKey;
 
     sdkPromise = new Promise((resolve, reject) => {
       const params = new URLSearchParams({
@@ -132,8 +138,8 @@ window.DabLabsPayPal = (() => {
 
       const buttonStyle = { layout: 'vertical', shape: 'rect', height: 48 };
       const sources = [
-        { source: paypal.FUNDING.PAYPAL, style: { ...buttonStyle, color: 'gold', label: 'paypal' } },
         { source: paypal.FUNDING.CARD, style: { ...buttonStyle, color: 'black', label: 'pay' } },
+        { source: paypal.FUNDING.PAYPAL, style: { ...buttonStyle, color: 'gold', label: 'paypal' } },
       ];
 
       let rendered = 0;
