@@ -17,3 +17,19 @@ services:
         sync: false
       - key: STORE_EMAIL
         value: hello@dablabs.com.au
+      - key: ORDER_NOTIFY_EMAIL
+        value: feedback425@gmail.com
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        value: feedback425@gmail.com
+      - key: SMTP_FROM
+        value: Dab Labs Store <feedback425@gmail.com>
+      - key: SMTP_PASS
+        sync: false
+      - key: ADMIN_ORDERS_SECRET
+        sync: false
+      - key: SEND_CUSTOMER_RECEIPT
+        value: "true"

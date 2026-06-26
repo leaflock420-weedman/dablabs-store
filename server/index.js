@@ -10,9 +10,12 @@ const {
 const {
   saveOrder,
   findOrder,
+  readOrders,
   updateOrderByPayPalId,
   updateOrderById,
 } = require('./lib/orders-store');
+const { queueOrderNotifications, getMailConfig } = require('./lib/order-notify');
+const { renderOrdersPage } = require('./lib/admin-orders');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -47,8 +50,26 @@ function validateCheckoutPayload(body) {
   return errors;
 }
 
+function isAdmin(req) {
+  const secret = process.env.ADMIN_ORDERS_SECRET;
+  if (!secret) return false;
+  const key = req.headers['x-admin-key'] || req.query.key;
+  return key === secret;
+}
+
+function notifyPaidOrder(order) {
+  if (order?.status === 'paid') queueOrderNotifications(order);
+  return order;
+}
+
 app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, service: 'dablabs-checkout' });
+  const mail = getMailConfig();
+  res.json({
+    ok: true,
+    service: 'dablabs-checkout',
+    email: { configured: mail.configured, notifyTo: mail.notifyTo },
+    ordersAdmin: Boolean(process.env.ADMIN_ORDERS_SECRET),
+  });
 });
 
 app.get('/api/paypal/config', (_req, res) => {
@@ -70,6 +91,8 @@ app.post('/api/paypal/create-order', async (req, res) => {
       items: body.items,
       subtotal: body.subtotal,
       shipping: body.shipping,
+      discount: body.discount || 0,
+      discountLabel: body.discountLabel || null,
       total: body.total,
       currency: body.currency || 'AUD',
       shippingMethod: body.shippingMethod || 'standard',
@@ -115,6 +138,7 @@ app.post('/api/paypal/capture-order', async (req, res) => {
 
     let order = updateOrderByPayPalId(orderID, patch);
     if (!order && customId) order = updateOrderById(customId, patch);
+    notifyPaidOrder(order);
 
     res.json({
       status: captureStatus,
@@ -151,12 +175,13 @@ app.post('/api/paypal/webhook', async (req, res) => {
         const captureStatus = capture.status;
         const purchaseUnit = capture.purchase_units?.[0];
         const captureDetail = purchaseUnit?.payments?.captures?.[0];
-        updateOrderByPayPalId(paypalOrderId, {
+        const order = updateOrderByPayPalId(paypalOrderId, {
           status: captureStatus === 'COMPLETED' ? 'paid' : 'approved',
           paypalCaptureId: captureDetail?.id || null,
           paidAt: captureStatus === 'COMPLETED' ? new Date().toISOString() : null,
           webhookAt: new Date().toISOString(),
         });
+        notifyPaidOrder(order);
       } catch (err) {
         console.error('[webhook] auto-capture failed:', err.message);
         updateOrderByPayPalId(paypalOrderId, { status: 'approved', webhookAt: new Date().toISOString() });
@@ -166,19 +191,21 @@ app.post('/api/paypal/webhook', async (req, res) => {
     if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {
       const customId = resource.custom_id || resource.invoice_id;
       const captureId = resource.id;
+      let order = null;
       if (paypalOrderId) {
-        updateOrderByPayPalId(paypalOrderId, {
+        order = updateOrderByPayPalId(paypalOrderId, {
           status: 'paid',
           paypalCaptureId: captureId,
           paidAt: resource.create_time || new Date().toISOString(),
         });
       } else if (customId) {
-        updateOrderById(customId, {
+        order = updateOrderById(customId, {
           status: 'paid',
           paypalCaptureId: captureId,
           paidAt: resource.create_time || new Date().toISOString(),
         });
       }
+      notifyPaidOrder(order);
     }
 
     if (eventType === 'PAYMENT.CAPTURE.DENIED' || eventType === 'PAYMENT.CAPTURE.DECLINED') {
@@ -198,6 +225,18 @@ app.get('/api/orders/:id', (req, res) => {
   const order = findOrder(req.params.id);
   if (!order) return res.status(404).json({ error: 'Order not found' });
   res.json(order);
+});
+
+app.get('/api/admin/orders', (req, res) => {
+  if (!isAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const orders = readOrders();
+  res.json({ count: orders.length, orders });
+});
+
+app.get('/admin/orders', (req, res) => {
+  if (!isAdmin(req)) return res.status(401).send('Unauthorized — set ADMIN_ORDERS_SECRET on Render and open /admin/orders?key=YOUR_SECRET');
+  const mail = getMailConfig();
+  res.type('html').send(renderOrdersPage(readOrders(), { mailConfigured: mail.configured }));
 });
 
 app.get('*', (_req, res) => {
