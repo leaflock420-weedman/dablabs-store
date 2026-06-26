@@ -146,7 +146,21 @@ app.post('/api/paypal/webhook', async (req, res) => {
     const paypalOrderId = resource.id || resource.supplementary_data?.related_ids?.order_id;
 
     if (eventType === 'CHECKOUT.ORDER.APPROVED' && paypalOrderId) {
-      updateOrderByPayPalId(paypalOrderId, { status: 'approved', webhookAt: new Date().toISOString() });
+      try {
+        const capture = await capturePayPalOrder(paypalOrderId);
+        const captureStatus = capture.status;
+        const purchaseUnit = capture.purchase_units?.[0];
+        const captureDetail = purchaseUnit?.payments?.captures?.[0];
+        updateOrderByPayPalId(paypalOrderId, {
+          status: captureStatus === 'COMPLETED' ? 'paid' : 'approved',
+          paypalCaptureId: captureDetail?.id || null,
+          paidAt: captureStatus === 'COMPLETED' ? new Date().toISOString() : null,
+          webhookAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        console.error('[webhook] auto-capture failed:', err.message);
+        updateOrderByPayPalId(paypalOrderId, { status: 'approved', webhookAt: new Date().toISOString() });
+      }
     }
 
     if (eventType === 'PAYMENT.CAPTURE.COMPLETED') {

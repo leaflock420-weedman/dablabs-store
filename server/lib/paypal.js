@@ -150,12 +150,16 @@ function buildPurchaseUnit(order) {
 async function createPayPalOrder(order) {
   const body = {
     intent: 'CAPTURE',
+    processing_instruction: 'ORDER_COMPLETE_ON_PAYMENT_APPROVAL',
     purchase_units: [buildPurchaseUnit(order)],
     application_context: {
       brand_name: 'Dab Labs',
       landing_page: 'LOGIN',
       shipping_preference: 'SET_PROVIDED_ADDRESS',
       user_action: 'PAY_NOW',
+      payment_method: {
+        payee_preferred: 'IMMEDIATE_PAYMENT_REQUIRED',
+      },
     },
   };
 
@@ -165,11 +169,25 @@ async function createPayPalOrder(order) {
   });
 }
 
+async function getPayPalOrder(paypalOrderId) {
+  return paypalRequest(`/v2/checkout/orders/${paypalOrderId}`, { method: 'GET' });
+}
+
+function isAlreadyCapturedError(err) {
+  const issues = err.paypal?.details || [];
+  return issues.some((d) => /ALREADY_CAPTURED|ORDER_ALREADY_COMPLETED/i.test(d.issue || ''));
+}
+
 async function capturePayPalOrder(paypalOrderId) {
-  return paypalRequest(`/v2/checkout/orders/${paypalOrderId}/capture`, {
-    method: 'POST',
-    body: JSON.stringify({}),
-  });
+  try {
+    return await paypalRequest(`/v2/checkout/orders/${paypalOrderId}/capture`, {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  } catch (err) {
+    if (isAlreadyCapturedError(err)) return getPayPalOrder(paypalOrderId);
+    throw err;
+  }
 }
 
 async function verifyWebhookSignature(req) {
@@ -202,6 +220,7 @@ module.exports = {
   getPublicConfig,
   getCredentials,
   createPayPalOrder,
+  getPayPalOrder,
   capturePayPalOrder,
   verifyWebhookSignature,
 };

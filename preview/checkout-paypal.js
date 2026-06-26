@@ -107,7 +107,7 @@ window.DabLabsPayPal = (() => {
           return data.id;
         },
         onApprove: async (data) => {
-          container.innerHTML = '<p class="checkout__paypal-loading">Confirming payment…</p>';
+          container.innerHTML = '<p class="checkout__paypal-loading">Payment approved — finishing instantly…</p>';
           const res = await fetch(`${apiBase}/api/paypal/capture-order`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
