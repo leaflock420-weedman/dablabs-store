@@ -1208,6 +1208,43 @@ input, select { font-family: inherit; }
   color: var(--green);
   white-space: nowrap;
 }
+.checkout__pay {
+  margin-top: 0.4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.checkout__pay-hint {
+  margin: 0 0 1.2rem;
+  font-size: 1.3rem;
+  color: var(--muted);
+}
+.checkout__paypal-wrap {
+  position: relative;
+}
+.checkout__paypal-gate {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px dashed var(--border);
+  text-align: center;
+  pointer-events: all;
+  cursor: not-allowed;
+}
+.checkout__paypal-gate.is-active { display: flex; }
+.checkout__paypal-gate p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--muted);
+  max-width: 28rem;
+  line-height: 1.45;
+}
 .checkout__summary {
   background: var(--white);
   border: 1px solid var(--border);

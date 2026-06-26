@@ -1,4 +1,4 @@
-/* PayPal REST checkout — PayPal wallet only (no card guest checkout) */
+/* PayPal REST checkout — PayPal wallet only */
 window.DabLabsPayPal = (() => {
   let sdkPromise = null;
   let buttonInstance = null;
@@ -32,7 +32,6 @@ window.DabLabsPayPal = (() => {
       const script = document.createElement('script');
       script.src = `${config.sdkBase}?${params}`;
       script.async = true;
-      script.setAttribute('data-partner-attribution-id', 'DabLabs_SP');
       script.onload = () => resolve(window.paypal);
       script.onerror = () => reject(new Error('Failed to load PayPal SDK'));
       document.head.appendChild(script);
@@ -72,14 +71,20 @@ window.DabLabsPayPal = (() => {
       container.innerHTML = '';
 
       const handlers = {
-        onClick: (_data, actions) => {
-          if (onValidate && !onValidate()) {
-            onError?.('Please fill in all required checkout fields before paying.');
-            return actions.reject();
-          }
-          return actions.resolve();
-        },
         createOrder: async () => {
+          if (onValidate) {
+            const result = onValidate();
+            const check = result?.valid !== undefined ? result : { valid: !!result, missing: [] };
+            if (!check.valid) {
+              const msg = check.message
+                || (check.missing?.length
+                  ? `Please complete: ${check.missing.join(', ')}`
+                  : 'Please complete all required checkout fields.');
+              onError?.(msg);
+              throw new Error(msg);
+            }
+          }
+
           const payload = getOrderPayload();
           const res = await fetch(`${apiBase}/api/paypal/create-order`, {
             method: 'POST',
@@ -116,7 +121,8 @@ window.DabLabsPayPal = (() => {
         },
         onError: (err) => {
           console.error('[PayPal]', err);
-          onError?.(err?.message || 'PayPal error — please try again');
+          const msg = typeof err === 'string' ? err : (err?.message || 'PayPal error — please try again');
+          if (!/please complete/i.test(msg)) onError?.(msg);
         },
         onCancel: () => {
           onError?.('Payment cancelled — click PayPal when you\'re ready to pay.');

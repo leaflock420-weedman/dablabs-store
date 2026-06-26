@@ -185,16 +185,64 @@
     return data;
   }
 
-  function validateCheckoutForm() {
+  const CHECKOUT_REQUIRED = [
+    { name: 'email', label: 'Email', test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { name: 'phone', label: 'Phone', test: (v) => v.replace(/\D/g, '').length >= 8 },
+    { name: 'name', label: 'Full name', test: (v) => v.length >= 2 },
+    { name: 'address', label: 'Street address', test: (v) => v.length >= 3 },
+    { name: 'suburb', label: 'Suburb', test: (v) => v.length >= 2 },
+    { name: 'state', label: 'State', test: (v) => v.length >= 2 },
+    { name: 'postcode', label: 'Postcode', test: (v) => /^\d{4}$/.test(v) },
+  ];
+
+  function validateCheckoutForm(opts = {}) {
+    const { silent = false, markInvalid = !silent } = opts;
+    const data = getCheckoutFormData();
+    if (!data) return { valid: false, missing: ['Form'] };
+
+    const missing = [];
     const form = $('#checkoutForm');
-    if (!form) return false;
-    let valid = true;
-    form.querySelectorAll('[required]').forEach((el) => {
-      const ok = el.checkValidity();
-      el.classList.toggle('is-invalid', !ok);
-      if (!ok) valid = false;
+
+    CHECKOUT_REQUIRED.forEach(({ name, label, test }) => {
+      const raw = String(data[name] ?? '').trim();
+      const ok = test(raw);
+      const el = form?.elements[name];
+      if (el && markInvalid) el.classList.toggle('is-invalid', !ok);
+      if (!ok) missing.push(label);
     });
-    return valid;
+
+    if (missing.length && form && !silent) {
+      const firstBad = CHECKOUT_REQUIRED.find(({ name, label }) => missing.includes(label));
+      const el = firstBad && form.elements[firstBad.name];
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el?.focus?.();
+    }
+
+    return { valid: missing.length === 0, missing };
+  }
+
+  function updateCheckoutPayState() {
+    const result = validateCheckoutForm({ silent: true, markInvalid: false });
+    const gate = $('#paypalGate');
+    const gateMsg = $('#paypalGateMsg');
+    const hint = $('#checkoutPayHint');
+    const ready = result.valid && cart.length > 0;
+
+    if (gate) {
+      gate.classList.toggle('is-active', !ready);
+      gate.setAttribute('aria-hidden', ready ? 'true' : 'false');
+    }
+    if (gateMsg && !ready && result.missing.length) {
+      gateMsg.textContent = `Complete: ${result.missing.join(', ')}`;
+    } else if (gateMsg) {
+      gateMsg.textContent = 'Complete your details above to unlock PayPal.';
+    }
+    if (hint) {
+      hint.textContent = ready
+        ? 'You\'re all set — click PayPal below to pay securely.'
+        : 'Fill in your details above, then pay with PayPal.';
+    }
+    return result;
   }
 
   function renderCheckoutShippingOptions() {
@@ -273,6 +321,7 @@
     } else if (!cart.length) {
       window.DabLabsPayPal?.reset($('#paypalButtonContainer'));
     }
+    updateCheckoutPayState();
   }
 
   function buildOrderPayload() {
@@ -332,14 +381,17 @@
       onValidate: () => {
         if (!cart.length) {
           if (warn) { warn.hidden = false; warn.textContent = 'Your cart is empty.'; }
-          return false;
+          return { valid: false, message: 'Your cart is empty.' };
         }
-        const valid = validateCheckoutForm();
-        if (!valid && warn) {
-          warn.hidden = false;
-          warn.textContent = 'Please complete all required fields (email, phone, address).';
+        const result = updateCheckoutPayState();
+        if (!result.valid) {
+          validateCheckoutForm();
+          if (warn) {
+            warn.hidden = false;
+            warn.textContent = `Please complete: ${result.missing.join(', ')}`;
+          }
         }
-        return valid;
+        return result;
       },
       onSuccess: (result) => {
         paypalCheckoutReady = false;
@@ -405,8 +457,10 @@
     renderCheckoutSummary();
     showView('checkout');
     restoreCheckoutForm();
+    setupCheckoutFormListeners();
+    updateCheckoutPayState();
     if (isRestPayPal()) {
-      $('#checkoutSecureNote').textContent = 'PayPal secure checkout · AUD';
+      $('#checkoutSecureNote').textContent = 'Pay with your PayPal account · Secure checkout · AUD';
       initCheckoutPayPal();
     }
   }
@@ -433,11 +487,29 @@
     if (data) localStorage.setItem('dablabs-checkout-details', JSON.stringify(data));
   }
 
+  function setupCheckoutFormListeners() {
+    const form = $('#checkoutForm');
+    if (!form || form.dataset.listeners) return;
+    form.dataset.listeners = '1';
+    const onFormChange = () => {
+      const warn = $('#paypalConfigWarn');
+      if (warn) warn.hidden = true;
+      form.querySelectorAll('.is-invalid').forEach((el) => {
+        const name = el.name;
+        const rule = CHECKOUT_REQUIRED.find((r) => r.name === name);
+        if (rule && rule.test(String(el.value).trim())) el.classList.remove('is-invalid');
+      });
+      updateCheckoutPayState();
+    };
+    form.addEventListener('input', onFormChange);
+    form.addEventListener('change', onFormChange);
+  }
+
   function submitCheckout(e) {
     e.preventDefault();
     if (isRestPayPal()) return;
     if (!cart.length) return;
-    if (!validateCheckoutForm()) return;
+    if (!validateCheckoutForm().valid) return;
 
     if (!isPayPalConfigured()) {
       const warn = $('#paypalConfigWarn');

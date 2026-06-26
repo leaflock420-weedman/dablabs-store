@@ -200,15 +200,20 @@
                   <span>State *</span>
                   <select name="state" required autocomplete="address-level1">
                     <option value="">Select state</option>
-                    <option>NSW</option><option>VIC</option><option>QLD</option>
-                    <option>WA</option><option>SA</option><option>TAS</option>
-                    <option>ACT</option><option>NT</option>
+                    <option value="NSW">NSW</option>
+                    <option value="VIC">VIC</option>
+                    <option value="QLD">QLD</option>
+                    <option value="WA">WA</option>
+                    <option value="SA">SA</option>
+                    <option value="TAS">TAS</option>
+                    <option value="ACT">ACT</option>
+                    <option value="NT">NT</option>
                   </select>
                 </label>
               </div>
               <label class="checkout__field checkout__field--short">
                 <span>Postcode *</span>
-                <input type="text" name="postcode" required autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{4}" placeholder="2000">
+                <input type="text" name="postcode" required autocomplete="postal-code" inputmode="numeric" minlength="4" maxlength="4" placeholder="2000">
               </label>
             </div>
           </section>
@@ -223,18 +228,27 @@
               <textarea name="notes" rows="3" placeholder="Delivery instructions, colour preference, etc."></textarea>
             </label>
           </section>
+          <section class="checkout__section checkout__pay" id="checkoutPaySection">
+            <h2>Payment</h2>
+            <p class="checkout__pay-hint" id="checkoutPayHint">Fill in your details above, then pay with PayPal.</p>
+            <div id="paypalModeBadge" class="checkout__mode-badge" hidden></div>
+            <div class="checkout__paypal-wrap">
+              <div id="paypalGate" class="checkout__paypal-gate" aria-hidden="true">
+                <p id="paypalGateMsg">Complete your details above to unlock PayPal.</p>
+              </div>
+              <div id="paypalButtonContainer" class="checkout__paypal-buttons"></div>
+            </div>
+            <button type="submit" class="btn btn--paypal btn--full" id="paypalPayBtn" hidden>
+              Pay with PayPal
+            </button>
+            <p class="checkout__secure" id="checkoutSecureNote">Pay with your PayPal account · Secure checkout · AUD</p>
+            <p class="checkout__config-warn" id="paypalConfigWarn" hidden></p>
+          </section>
         </form>
         <aside class="checkout__summary" id="checkoutSummary">
           <h2>Order summary</h2>
           <div class="checkout__lines" id="checkoutLines"></div>
           <div class="checkout__totals" id="checkoutTotals"></div>
-          <div id="paypalModeBadge" class="checkout__mode-badge" hidden></div>
-          <div id="paypalButtonContainer" class="checkout__paypal-buttons"></div>
-          <button type="submit" form="checkoutForm" class="btn btn--paypal btn--full" id="paypalPayBtn" hidden>
-            Pay with PayPal
-          </button>
-          <p class="checkout__secure" id="checkoutSecureNote">Pay with your PayPal account · Secure checkout · AUD</p>
-          <p class="checkout__config-warn" id="paypalConfigWarn" hidden></p>
         </aside>
       </div>
 
