@@ -1,0 +1,132 @@
+{
+  "store": {
+    "name": "Dab Labs",
+    "legal_name": "Dab Labs AU",
+    "domain": "dablabs.com.au",
+    "myshopify_domain": "dablabs-au.myshopify.com",
+    "email": "hello@dablabs.com.au",
+    "timezone": "Australia/Sydney",
+    "currency": "AUD",
+    "weight_unit": "kg",
+    "country": "Australia"
+  },
+  "branding": {
+    "tagline": "Premium Puffco accessories. Elevated sessions.",
+    "colors": {
+      "primary": "#1B4332",
+      "secondary": "#E07A3D",
+      "background": "#F5F0E8",
+      "text": "#1A1A1A",
+      "accent": "#2D6A4F"
+    },
+    "fonts": {
+      "heading": "DM Sans",
+      "body": "Inter"
+    },
+    "assets": {
+      "logo": "../brand/logo-canva.png",
+      "logo_svg": "../brand/logo.svg",
+      "favicon": "../brand/favicon.png"
+    }
+  },
+  "collections": [
+    { "title": "Peak Tops", "handle": "peak-tops", "sort": "best-selling" },
+    { "title": "Proxy", "handle": "proxy", "sort": "best-selling" },
+    { "title": "Chambers", "handle": "chambers", "sort": "best-selling" },
+    { "title": "Joysticks & Tethers", "handle": "joysticks-tethers", "sort": "best-selling" },
+    { "title": "Limited Editions", "handle": "limited-editions", "sort": "created-desc" },
+    { "title": "Best Sellers", "handle": "best-sellers", "sort": "best-selling" }
+  ],
+  "payments": {
+    "primary": "shopify_payments",
+    "additional": [
+      {
+        "provider": "afterpay",
+        "app": "Afterpay",
+        "priority": 1,
+        "notes": "Essential for AU — install from Shopify App Store. Enables Pay in 4."
+      },
+      {
+        "provider": "zip",
+        "app": "Zip Pay & Zip Money",
+        "priority": 2,
+        "notes": "Install 'Zip - Buy Now Pay Later' from Shopify App Store."
+      }
+    ],
+    "also_enable": ["paypal", "apple_pay", "google_pay"],
+    "shopify_payments_setup": {
+      "business_type": "sole_trader_or_company",
+      "bank_account_country": "AU",
+      "payout_currency": "AUD",
+      "required_documents": ["ABN", "bank_details", "ID_verification"]
+    }
+  },
+  "shipping": {
+    "origin": {
+      "country": "AU",
+      "province": "Set your state",
+      "postal_code": "Set your postcode"
+    },
+    "zones": [
+      {
+        "name": "Australia",
+        "countries": ["AU"],
+        "rates": [
+          {
+            "name": "Standard Shipping",
+            "type": "price_based",
+            "min_order": 0,
+            "max_order": 99.99,
+            "price": 9.95
+          },
+          {
+            "name": "Standard Shipping",
+            "type": "price_based",
+            "min_order": 100,
+            "max_order": null,
+            "price": 0,
+            "label": "Free standard shipping over $100"
+          },
+          {
+            "name": "Express Shipping",
+            "type": "flat_rate",
+            "price": 14.95
+          }
+        ]
+      },
+      {
+        "name": "International",
+        "countries": ["NZ", "US", "GB", "CA"],
+        "enabled": false,
+        "rates": [
+          {
+            "name": "International Standard",
+            "type": "flat_rate",
+            "price": 24.95,
+            "notes": "Enable when ready to ship overseas"
+          }
+        ]
+      }
+    ]
+  },
+  "policies": {
+    "shipping_policy": "Ships from Australia within 1-2 business days. Standard 3-7 business days AU-wide. Express 1-3 business days metro.",
+    "return_policy": "30-day returns on unused items in original packaging.",
+    "privacy_policy": "Required — generate via Shopify Settings > Policies"
+  },
+  "checkout": {
+    "customer_accounts": "optional",
+    "marketing_opt_in": true,
+    "tips": false,
+    "order_notes": true,
+    "preview_paypal_config": "preview/checkout-config.js",
+    "notes": "Static preview checkout — edit preview/checkout-config.js with your PayPal.me username or payment link."
+  },
+  "apps_recommended": [
+    "Afterpay",
+    "Zip - Buy Now Pay Later",
+    "Judge.me Reviews",
+    "Klaviyo (email)",
+    "Search & Discovery (Shopify native)"
+  ]
+}

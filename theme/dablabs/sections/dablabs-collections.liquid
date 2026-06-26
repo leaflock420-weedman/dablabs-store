@@ -1,0 +1,97 @@
+{{ 'dablabs.css' | asset_url | stylesheet_tag }}
+
+<section class="dl-collections" id="DabLabsCollections-{{ section.id }}">
+  <div class="dl-collections__header">
+    {%- if section.settings.label != blank -%}
+      <span class="dl-section-label">{{ section.settings.label }}</span>
+    {%- endif -%}
+    <h2 class="dl-collections__title">{{ section.settings.title }}</h2>
+    {%- if section.settings.description != blank -%}
+      <p class="dl-collections__desc">{{ section.settings.description }}</p>
+    {%- endif -%}
+  </div>
+  <div class="dl-collections__grid">
+    {%- for block in section.blocks -%}
+      {%- assign collection = block.settings.collection -%}
+      {%- if collection != blank -%}
+        <a href="{{ collection.url }}" class="dl-collection-card" {{ block.shopify_attributes }}>
+          <div class="dl-collection-card__bg"></div>
+          {%- if collection.featured_image -%}
+            {{ collection.featured_image | image_url: width: 600 | image_tag: class: 'dl-collection-card__bg', style: 'object-fit:cover;width:100%;height:100%;position:absolute;inset:0;opacity:0.5;', loading: 'lazy' }}
+          {%- endif -%}
+          <div class="dl-collection-card__overlay"></div>
+          <div class="dl-collection-card__content">
+            <h3 class="dl-collection-card__name">{{ collection.title }}</h3>
+            <p class="dl-collection-card__count">{{ collection.all_products_count }} products</p>
+          </div>
+        </a>
+      {%- else -%}
+        <div class="dl-collection-card" {{ block.shopify_attributes }}>
+          <div class="dl-collection-card__bg"></div>
+          <div class="dl-collection-card__overlay"></div>
+          <div class="dl-collection-card__content">
+            <h3 class="dl-collection-card__name">{{ block.settings.title }}</h3>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Dab Labs Collections",
+  "tag": "section",
+  "class": "section-dablabs-collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Shop by category"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop Collections"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Everything your Puffco needs — tops, chambers, joysticks and more."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Fallback title",
+          "info": "Shown if no collection selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dab Labs Collections",
+      "blocks": [
+        { "type": "collection", "settings": { "title": "Peak Tops" } },
+        { "type": "collection", "settings": { "title": "Proxy" } },
+        { "type": "collection", "settings": { "title": "Chambers" } },
+        { "type": "collection", "settings": { "title": "Joysticks & Tethers" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

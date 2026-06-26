@@ -1,0 +1,98 @@
+{{ 'dablabs.css' | asset_url | stylesheet_tag }}
+
+<section class="dl-hero color-scheme-dark" id="DabLabsHero-{{ section.id }}">
+  <div class="dl-hero__smoke" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="dl-hero__content page-width">
+    <div class="dl-hero__text">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="dl-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1 class="dl-hero__title">{{ section.settings.heading }}</h1>
+      {%- if section.settings.subheading != blank -%}
+        <p class="dl-hero__subtitle">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+      <div class="dl-hero__actions">
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link }}" class="dl-hero__btn dl-hero__btn--primary">
+            {{ section.settings.button_label }}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank -%}
+          <a href="{{ section.settings.button_link_2 }}" class="dl-hero__btn dl-hero__btn--ghost">
+            {{ section.settings.button_label_2 }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="dl-hero__visual" aria-hidden="true">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 800 | image_tag: class: 'dl-hero__orb', loading: 'eager', widths: '400,600,800' }}
+      {%- else -%}
+        <div class="dl-hero__orb"></div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Dab Labs Hero",
+  "tag": "section",
+  "class": "section-dablabs-hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Premium Puffco Accessories"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Elevate your <em>session</em>"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Peak tops, Proxy parts, chambers & more. Shipped from Australia with Afterpay & Zip."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button",
+      "default": "Shop collections"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Secondary button",
+      "default": "Best sellers"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image (optional — replaces orb)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dab Labs Hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,347 @@
+/* Dab Labs — custom brand layer */
+
+:root {
+  --dl-green: #1B4332;
+  --dl-green-light: #2D6A4F;
+  --dl-cream: #F5F0E8;
+  --dl-orange: #E07A3D;
+  --dl-orange-light: #F4A261;
+  --dl-dark: #0D2818;
+}
+
+/* Smooth scroll + selection */
+html { scroll-behavior: smooth; }
+::selection {
+  background: rgba(224, 122, 61, 0.35);
+  color: var(--dl-dark);
+}
+
+/* Buttons — warmer, pillier */
+.button, .shopify-payment-button__button {
+  border-radius: 999px !important;
+  letter-spacing: 0.04em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.button:not([disabled]):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(27, 67, 50, 0.2);
+}
+
+/* Cards — soft lift on hover */
+.card-wrapper .card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-wrapper:hover .card {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(27, 67, 50, 0.12);
+}
+
+/* Announcement bar */
+.announcement-bar {
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+}
+
+/* Header */
+.header {
+  backdrop-filter: blur(12px);
+  background: rgba(245, 240, 232, 0.92) !important;
+}
+
+/* Product badges */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 1rem;
+}
+
+/* Footer trust strip */
+.dl-trust-bar {
+  background: var(--dl-dark);
+  color: var(--dl-cream);
+  padding: 1.4rem 0;
+}
+.dl-trust-bar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem 3rem;
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.dl-trust-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.3rem;
+  opacity: 0.9;
+}
+.dl-trust-bar__icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+/* Hero */
+.dl-hero {
+  position: relative;
+  min-height: 72vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(145deg, var(--dl-dark) 0%, var(--dl-green) 45%, var(--dl-green-light) 100%);
+}
+.dl-hero__smoke {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.dl-hero__smoke span {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,240,232,0.08) 0%, transparent 70%);
+  animation: dl-drift 18s ease-in-out infinite;
+}
+.dl-hero__smoke span:nth-child(1) { width: 400px; height: 400px; top: 10%; left: -5%; animation-delay: 0s; }
+.dl-hero__smoke span:nth-child(2) { width: 300px; height: 300px; top: 50%; right: 10%; animation-delay: -6s; }
+.dl-hero__smoke span:nth-child(3) { width: 500px; height: 500px; bottom: -10%; left: 30%; animation-delay: -12s; }
+.dl-hero__smoke span:nth-child(4) { width: 250px; height: 250px; top: 20%; right: 30%; animation-delay: -3s; }
+
+@keyframes dl-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  33% { transform: translate(30px, -20px) scale(1.1); opacity: 0.8; }
+  66% { transform: translate(-20px, 15px) scale(0.95); opacity: 0.5; }
+}
+
+.dl-hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+@media (min-width: 990px) {
+  .dl-hero__content {
+    grid-template-columns: 1.1fr 0.9fr;
+    padding: 8rem 4rem;
+  }
+}
+
+.dl-hero__eyebrow {
+  display: inline-block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dl-orange-light);
+  margin-bottom: 1.2rem;
+}
+.dl-hero__title {
+  font-size: clamp(3.6rem, 7vw, 6.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--dl-cream);
+  margin: 0 0 1.6rem;
+  letter-spacing: -0.02em;
+}
+.dl-hero__title em {
+  font-style: normal;
+  color: var(--dl-orange);
+}
+.dl-hero__subtitle {
+  font-size: 1.8rem;
+  line-height: 1.6;
+  color: rgba(245, 240, 232, 0.8);
+  max-width: 48rem;
+  margin: 0 0 2.4rem;
+}
+.dl-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+.dl-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.4rem 2.8rem;
+  border-radius: 999px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.dl-hero__btn--primary {
+  background: var(--dl-orange);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(224, 122, 61, 0.4);
+}
+.dl-hero__btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(224, 122, 61, 0.5);
+}
+.dl-hero__btn--ghost {
+  background: transparent;
+  color: var(--dl-cream);
+  border: 2px solid rgba(245, 240, 232, 0.35);
+}
+.dl-hero__btn--ghost:hover {
+  border-color: var(--dl-cream);
+  background: rgba(245, 240, 232, 0.08);
+}
+
+.dl-hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dl-hero__orb {
+  width: min(36rem, 80vw);
+  height: min(36rem, 80vw);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--dl-orange-light), var(--dl-orange) 40%, var(--dl-green) 100%);
+  box-shadow:
+    0 0 80px rgba(224, 122, 61, 0.3),
+    inset 0 0 60px rgba(255,255,255,0.1);
+  animation: dl-pulse 4s ease-in-out infinite;
+  position: relative;
+}
+.dl-hero__orb::after {
+  content: '';
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  border: 2px solid rgba(245, 240, 232, 0.15);
+  animation: dl-spin 20s linear infinite;
+}
+@keyframes dl-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+@keyframes dl-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Collection grid section */
+.dl-collections {
+  padding: 5rem 2rem;
+  background: var(--dl-cream);
+}
+.dl-collections__header {
+  text-align: center;
+  max-width: 60rem;
+  margin: 0 auto 4rem;
+}
+.dl-collections__title {
+  font-size: clamp(2.8rem, 5vw, 4rem);
+  color: var(--dl-green);
+  margin: 0 0 1rem;
+}
+.dl-collections__desc {
+  font-size: 1.6rem;
+  color: rgba(26, 26, 26, 0.65);
+  line-height: 1.6;
+}
+.dl-collections__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.6rem;
+  max-width: 120rem;
+  margin: 0 auto;
+}
+@media (min-width: 750px) {
+  .dl-collections__grid { grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+}
+.dl-collection-card {
+  position: relative;
+  border-radius: 1.6rem;
+  overflow: hidden;
+  aspect-ratio: 1;
+  text-decoration: none;
+  display: block;
+  background: var(--dl-green);
+  transition: transform 0.25s ease;
+}
+.dl-collection-card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+.dl-collection-card__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--dl-green-light), var(--dl-green));
+  opacity: 0.9;
+}
+.dl-collection-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,40,24,0.85) 0%, transparent 60%);
+}
+.dl-collection-card__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  z-index: 2;
+}
+.dl-collection-card__name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--dl-cream);
+  margin: 0;
+}
+.dl-collection-card__count {
+  font-size: 1.2rem;
+  color: var(--dl-orange-light);
+  margin-top: 0.4rem;
+  letter-spacing: 0.05em;
+}
+.dl-collection-card__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  font-size: 4rem;
+  opacity: 0.15;
+  z-index: 1;
+}
+
+/* Payment badges footer */
+.dl-payments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 2rem 0 0;
+}
+.dl-payments__badge {
+  background: rgba(27, 67, 50, 0.08);
+  border-radius: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--dl-green);
+  letter-spacing: 0.04em;
+}
+.dl-payments__badge--afterpay { color: #b2fce4; background: #000; }
+.dl-payments__badge--zip { color: #fff; background: #1a0826; }
+
+/* Section spacing */
+.dl-section-label {
+  display: block;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dl-orange);
+  margin-bottom: 0.8rem;
+}

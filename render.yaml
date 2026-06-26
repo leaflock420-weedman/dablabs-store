@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: dablabs-store
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: PAYPAL_MODE
+        value: sandbox
+      - key: PAYPAL_SANDBOX_CLIENT_ID
+        sync: false
+      - key: PAYPAL_SANDBOX_CLIENT_SECRET
+        sync: false
+      - key: STORE_EMAIL
+        value: hello@dablabs.com.au

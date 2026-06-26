@@ -1,0 +1,35 @@
+{
+  "menu_title": "Main menu",
+  "handle": "main-menu",
+  "items": [
+    {
+      "title": "Shop All",
+      "url": "/collections/all"
+    },
+    {
+      "title": "Peak Tops",
+      "url": "/collections/peak-tops"
+    },
+    {
+      "title": "Proxy",
+      "url": "/collections/proxy"
+    },
+    {
+      "title": "Chambers",
+      "url": "/collections/chambers"
+    },
+    {
+      "title": "Joysticks & Tethers",
+      "url": "/collections/joysticks-tethers"
+    },
+    {
+      "title": "Limited Editions",
+      "url": "/collections/limited-editions"
+    },
+    {
+      "title": "Best Sellers",
+      "url": "/collections/best-sellers"
+    }
+  ],
+  "setup_instructions": "Online Store > Navigation > Main menu — add these items after creating collections"
+}

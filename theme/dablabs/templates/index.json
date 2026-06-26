@@ -1,0 +1,138 @@
+{
+  "sections": {
+    "trust_bar": {
+      "type": "dablabs-trust-bar",
+      "blocks": {
+        "t1": { "type": "trust_item", "settings": { "icon": "shipping", "text": "Free standard shipping over $100 AUD" } },
+        "t2": { "type": "trust_item", "settings": { "icon": "payment", "text": "Afterpay & Zip — pay in 4 interest-free" } },
+        "t3": { "type": "trust_item", "settings": { "icon": "australia", "text": "Shipped from Australia" } }
+      },
+      "block_order": ["t1", "t2", "t3"]
+    },
+    "hero": {
+      "type": "dablabs-hero",
+      "settings": {
+        "eyebrow": "Premium Puffco Accessories",
+        "heading": "Elevate your <em>session</em>",
+        "subheading": "Peak tops, Proxy parts, chambers & more. The accessories your rig's been missing — stocked and shipped from Australia.",
+        "button_label": "Shop collections",
+        "button_link": "shopify://collections/all",
+        "button_label_2": "Best sellers",
+        "button_link_2": "shopify://collections/best-sellers"
+      }
+    },
+    "collections": {
+      "type": "dablabs-collections",
+      "blocks": {
+        "c1": { "type": "collection", "settings": { "collection": "peak-tops", "title": "Peak Tops" } },
+        "c2": { "type": "collection", "settings": { "collection": "proxy", "title": "Proxy" } },
+        "c3": { "type": "collection", "settings": { "collection": "chambers", "title": "Chambers" } },
+        "c4": { "type": "collection", "settings": { "collection": "joysticks-tethers", "title": "Joysticks & Tethers" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"],
+      "settings": {
+        "label": "Shop by category",
+        "title": "Shop Collections",
+        "description": "Everything your Puffco needs — curated tops, chambers, joysticks and limited drops."
+      }
+    },
+    "featured_limited": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Limited Editions",
+        "heading_size": "h2",
+        "description": "<p>Rare drops and collabs — when they're gone, they're gone.</p>",
+        "show_description": true,
+        "description_style": "body",
+        "collection": "limited-editions",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-2",
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "outline",
+        "enable_desktop_slider": false,
+        "swipe_on_mobile": true,
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "padding_top": 48,
+        "padding_bottom": 36
+      }
+    },
+    "featured_bestsellers": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Best Sellers",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "best-sellers",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "swipe_on_mobile": true,
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 52
+      }
+    },
+    "image_with_text": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading": { "type": "heading", "settings": { "heading": "What's New", "heading_size": "h1" } },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Fresh drops landing regularly. We stock the accessories serious dabbers actually want — no fluff, just quality Puffco gear shipped fast from down under.</p>",
+            "text_style": "body"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "See what's new",
+            "button_link": "shopify://collections/limited-editions",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": ["heading", "text", "button"],
+      "settings": {
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "color_scheme": "scheme-3",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "trust_bar",
+    "hero",
+    "collections",
+    "featured_limited",
+    "featured_bestsellers",
+    "image_with_text"
+  ]
+}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Dab Labs — Premium Puffco Accessories | Australia's Head Shop</title>
+  <meta name="description" content="Premium Puffco accessories — glass tops, chambers, pearls, carb caps & more. Shipped from Australia. Afterpay & Zip available.">
+  <meta property="og:image" content="assets/dablabs-logo-original.png">
+  <link rel="icon" type="image/png" href="assets/dablabs-logo-original.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Ambient green smoke layers -->
+  <div class="smoke-bg" aria-hidden="true">
+    <canvas id="smokeCanvas"></canvas>
+    <div class="smoke-cloud smoke-cloud--1"></div>
+    <div class="smoke-cloud smoke-cloud--2"></div>
+    <div class="smoke-cloud smoke-cloud--3"></div>
+    <div class="smoke-cloud smoke-cloud--4"></div>
+  </div>
+
+  <!-- EF420-style promo ticker -->
+  <div class="promo-bar">
+    <div class="promo-bar__track">
+      <span>Free shipping over $100 AUD — stay lifted, pay less</span>
+      <span>Afterpay & Zip — sesh now, pay later</span>
+      <span>Premium Puffco dabs gear — shipped from Australia</span>
+      <span>Wax-ready. Terp-tested. Session approved.</span>
+    </div>
+  </div>
+
+  <!-- Smoke Cartel-style header -->
+  <header class="header">
+    <div class="header__top">
+      <button class="header__menu" id="menuBtn" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <a href="#" class="header__logo" data-nav="home" aria-label="Dab Labs home">
+        <span class="header__logo-glow" aria-hidden="true"></span>
+        <span class="header__logo-smoke" aria-hidden="true"></span>
+        <img src="assets/dablabs-logo-original.png" alt="Dab Labs" class="header__logo-img" width="160" height="48">
+      </a>
+      <div class="header__search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="search" id="searchInput" placeholder="Search Puffco accessories..." autocomplete="off">
+      </div>
+      <button class="header__cart" id="cartBtn" aria-label="Cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 6h15l-1.5 9H8L6 6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.5" fill="currentColor"/><circle cx="18" cy="20" r="1.5" fill="currentColor"/><path d="M6 6L5 3H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="header__cart-badge" id="cartCount">0</span>
+      </button>
+    </div>
+    <nav class="header__nav" id="mainNav">
+      <button class="nav-chip active" data-filter="all">Shop All</button>
+      <!-- populated by JS -->
+    </nav>
+  </header>
+
+  <div class="mobile-drawer" id="mobileDrawer" hidden>
+    <div class="mobile-drawer__panel">
+      <button class="mobile-drawer__close" id="drawerClose" aria-label="Close menu">✕</button>
+      <div class="mobile-drawer__search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="search" id="mobileSearchInput" placeholder="Search products..." autocomplete="off" aria-label="Search products">
+      </div>
+      <div class="mobile-drawer__nav" id="mobileNav"></div>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- HOME -->
+    <div id="view-home" class="page-view">
+      <section class="site-banner">
+        <div class="site-banner__bg" aria-hidden="true">
+          <img src="assets/dablabs-logo-smoke-layer.jpg" alt="" class="site-banner__smoke-img">
+          <div class="site-banner__smoke">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="site-banner__fade"></div>
+        </div>
+        <div class="site-banner__inner reveal">
+          <img src="assets/dablabs-logo-original.png" alt="Dab Labs" class="site-banner__logo">
+          <p class="site-banner__tagline">Premium Puffco accessories · Shipped from Australia</p>
+          <div class="site-banner__actions">
+            <button class="btn btn--wax" data-filter="all">Shop the drop</button>
+            <button class="btn btn--ghost" data-filter="Limited Edition">Limited runs →</button>
+          </div>
+        </div>
+        <div class="site-banner__stats reveal">
+          <div><strong>19+</strong><span>Products</span></div>
+          <div><strong>Free ship</strong><span>Over $100</span></div>
+          <div><strong>Afterpay</strong><span>& Zip</span></div>
+        </div>
+      </section>
+
+      <section class="cat-tiles" id="catTiles"></section>
+
+      <section class="product-section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Just dropped</span>
+            <h2>Limited Editions</h2>
+          </div>
+          <button class="link-btn" data-filter="Limited Edition">View all →</button>
+        </div>
+        <div class="product-grid" id="limitedGrid"></div>
+      </section>
+
+      <section class="product-section product-section--alt">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Fan favourites</span>
+            <h2>Best Sellers</h2>
+          </div>
+        </div>
+        <div class="product-grid" id="bestsellerGrid"></div>
+      </section>
+    </div>
+
+    <!-- SHOP / COLLECTION -->
+    <div id="view-shop" class="page-view" hidden>
+      <div class="shop-header">
+        <h1 id="shopTitle">All Products</h1>
+        <p id="shopCount"></p>
+      </div>
+      <div class="shop-toolbar">
+        <div class="filter-chips" id="filterChips"></div>
+        <select id="sortSelect" class="sort-select">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+      <div class="product-grid product-grid--shop" id="shopGrid"></div>
+    </div>
+
+    <!-- PRODUCT DETAIL -->
+    <div id="view-product" class="page-view" hidden>
+      <button class="back-btn" id="backBtn">← Back to shop</button>
+      <div class="pdp" id="pdp"></div>
+    </div>
+
+    <!-- CHECKOUT -->
+    <div id="view-checkout" class="page-view" hidden>
+      <div class="checkout" id="checkoutMain">
+        <button class="back-btn" id="checkoutBackBtn" type="button">← Back to cart</button>
+        <div class="checkout__head">
+          <span class="eyebrow">Secure checkout</span>
+          <h1>Complete your order</h1>
+          <p class="checkout__sub">Ships from Australia · Pay securely with PayPal</p>
+        </div>
+        <form class="checkout__form" id="checkoutForm" novalidate>
+          <section class="checkout__section">
+            <h2>Contact</h2>
+            <div class="checkout__grid checkout__grid--2">
+              <label class="checkout__field">
+                <span>Email *</span>
+                <input type="email" name="email" required autocomplete="email" placeholder="you@email.com">
+              </label>
+              <label class="checkout__field">
+                <span>Phone *</span>
+                <input type="tel" name="phone" required autocomplete="tel" placeholder="04xx xxx xxx">
+              </label>
+            </div>
+          </section>
+          <section class="checkout__section">
+            <h2>Shipping address</h2>
+            <div class="checkout__grid">
+              <label class="checkout__field">
+                <span>Full name *</span>
+                <input type="text" name="name" required autocomplete="name" placeholder="Full name">
+              </label>
+              <label class="checkout__field">
+                <span>Street address *</span>
+                <input type="text" name="address" required autocomplete="street-address" placeholder="Street address">
+              </label>
+              <div class="checkout__grid checkout__grid--2">
+                <label class="checkout__field">
+                  <span>Suburb *</span>
+                  <input type="text" name="suburb" required autocomplete="address-level2" placeholder="Suburb">
+                </label>
+                <label class="checkout__field">
+                  <span>State *</span>
+                  <select name="state" required autocomplete="address-level1">
+                    <option value="">Select state</option>
+                    <option>NSW</option><option>VIC</option><option>QLD</option>
+                    <option>WA</option><option>SA</option><option>TAS</option>
+                    <option>ACT</option><option>NT</option>
+                  </select>
+                </label>
+              </div>
+              <label class="checkout__field checkout__field--short">
+                <span>Postcode *</span>
+                <input type="text" name="postcode" required autocomplete="postal-code" inputmode="numeric" pattern="[0-9]{4}" placeholder="2000">
+              </label>
+            </div>
+          </section>
+          <section class="checkout__section">
+            <h2>Delivery</h2>
+            <div class="checkout__shipping-options" id="shippingOptions"></div>
+          </section>
+          <section class="checkout__section">
+            <h2>Order notes <small>(optional)</small></h2>
+            <label class="checkout__field">
+              <span class="visually-hidden">Order notes</span>
+              <textarea name="notes" rows="3" placeholder="Delivery instructions, colour preference, etc."></textarea>
+            </label>
+          </section>
+        </form>
+        <aside class="checkout__summary" id="checkoutSummary">
+          <h2>Order summary</h2>
+          <div class="checkout__lines" id="checkoutLines"></div>
+          <div class="checkout__totals" id="checkoutTotals"></div>
+          <div id="paypalModeBadge" class="checkout__mode-badge" hidden></div>
+          <div id="paypalButtonContainer" class="checkout__paypal-buttons"></div>
+          <button type="submit" form="checkoutForm" class="btn btn--paypal btn--full" id="paypalPayBtn" hidden>
+            Pay with PayPal
+          </button>
+          <p class="checkout__secure" id="checkoutSecureNote">PayPal secure checkout · AUD</p>
+          <p class="checkout__config-warn" id="paypalConfigWarn" hidden></p>
+        </aside>
+      </div>
+
+      <div class="checkout-pending" id="checkoutPending" hidden>
+        <div class="checkout-pending__card">
+          <div class="checkout-pending__icon">💨</div>
+          <h1>Almost there!</h1>
+          <p class="checkout-pending__id">Order <strong id="pendingOrderId"></strong></p>
+          <p id="pendingInstructions"></p>
+          <ol class="checkout-pending__steps" id="pendingSteps">
+            <li>Complete payment in the PayPal window</li>
+            <li>Add your <strong>order number</strong> in the PayPal note/memo</li>
+            <li>We'll email you when your order ships</li>
+          </ol>
+          <div class="checkout-pending__actions">
+            <a class="btn btn--paypal btn--full" id="pendingPaypalBtn" href="#" target="_blank" rel="noopener">Open PayPal again</a>
+            <button class="btn btn--ghost btn--full" type="button" id="pendingHomeBtn">Continue shopping</button>
+          </div>
+          <p class="checkout-pending__email">Questions? <a id="pendingEmailLink" href="mailto:hello@dablabs.com.au">hello@dablabs.com.au</a></p>
+        </div>
+      </div>
+
+      <div class="checkout-pending checkout-pending--success" id="checkoutSuccess" hidden>
+        <div class="checkout-pending__card">
+          <div class="checkout-pending__icon">✓</div>
+          <h1>Payment confirmed!</h1>
+          <p class="checkout-pending__id">Order <strong id="successOrderId"></strong></p>
+          <p>Thanks — your PayPal payment went through. We'll pack and ship your order soon.</p>
+          <p class="checkout-pending__capture" id="successCaptureId"></p>
+          <button class="btn btn--wax btn--full" type="button" id="successHomeBtn">Continue shopping</button>
+          <p class="checkout-pending__email">Questions? <a id="successEmailLink" href="mailto:hello@dablabs.com.au">hello@dablabs.com.au</a></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Cart drawer (EF420 style) -->
+  <div class="cart-overlay" id="cartOverlay" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="cart-drawer__head">
+      <h2>Your Cart</h2>
+      <button id="cartClose">✕</button>
+    </div>
+    <div class="cart-shipping-bar" id="shippingBar">
+      <p id="shippingMsg">Add <strong>$100.00</strong> for free shipping!</p>
+      <div class="cart-shipping-bar__track"><div class="cart-shipping-bar__fill" id="shippingFill"></div></div>
+    </div>
+    <div class="cart-drawer__items" id="cartItems"></div>
+    <div class="cart-drawer__foot">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <strong id="cartTotal">$0.00 AUD</strong>
+      </div>
+      <p class="cart-note">Secure PayPal checkout · Ships from AU</p>
+      <button class="btn btn--lime btn--full" id="checkoutBtn" type="button">Check out</button>
+      <div class="cart-payments">
+        <span class="pay paypal">PayPal</span>
+      </div>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <div class="footer__glow" aria-hidden="true"></div>
+
+    <div class="footer__marquee" aria-hidden="true">
+      <div class="footer__marquee-track">
+        <span>DAB LABS</span><span>STAY LIFTED</span><span>STACK TERPS</span><span>AU SHIPPED</span><span>WAX READY</span><span>AFTERPAY</span><span>ZIP IT</span>
+        <span>DAB LABS</span><span>STAY LIFTED</span><span>STACK TERPS</span><span>AU SHIPPED</span><span>WAX READY</span><span>AFTERPAY</span><span>ZIP IT</span>
+      </div>
+    </div>
+
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <div class="footer__brand-row">
+            <a href="#" class="footer__logo-lockup" data-nav="home">
+              <img src="assets/dablabs-logo-original.png" alt="Dab Labs" class="footer__logo-img" width="180" height="54">
+            </a>
+          </div>
+          <p class="footer__tagline">Premium Puffco gear for people who actually know what a cold start is.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-btn" aria-label="Instagram">IG</a>
+            <a href="#" class="footer__social-btn" aria-label="TikTok">TT</a>
+            <a href="#" class="footer__social-btn" aria-label="YouTube">YT</a>
+          </div>
+        </div>
+
+        <div class="footer__cols">
+          <div class="footer__col">
+            <h4 class="footer__heading"><span>Shop</span></h4>
+            <nav id="footerNav" class="footer__links"></nav>
+          </div>
+          <div class="footer__col">
+            <h4 class="footer__heading"><span>The fine print</span></h4>
+            <nav class="footer__links">
+              <a href="#">Shipping & Returns</a>
+              <a href="#">Contact</a>
+              <a href="#">Afterpay</a>
+              <a href="#">Zip</a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="footer__cta">
+          <h4 class="footer__heading"><span>Join the sesh list</span></h4>
+          <p class="footer__cta-desc">Drops, limited glass & early access. No spam — just heat.</p>
+          <form class="footer__newsletter" onsubmit="return false">
+            <input type="email" placeholder="your@email.com" aria-label="Email">
+            <button type="submit" class="btn btn--wax">I'm in</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer__badges">
+        <span class="footer__badge">Afterpay</span>
+        <span class="footer__badge footer__badge--zip">Zip</span>
+        <span class="footer__badge">Shop Pay</span>
+        <span class="footer__badge">Apple Pay</span>
+        <span class="footer__badge footer__badge--au">🇦🇺 Shipped from AU</span>
+        <span class="footer__badge footer__badge--free">Free ship $100+</span>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copy">© 2026 Dab Labs · <a href="https://dablabs.com.au">dablabs.com.au</a></p>
+        <p class="footer__legal">All prices AUD · Not affiliated with Puffco</p>
+        <div class="footer__vibe">420</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="products-data.js"></script>
+  <script src="checkout-config.js"></script>
+  <script src="checkout-paypal.js"></script>
+  <script src="effects.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" role="img" aria-label="Dab Labs">
+  <defs>
+    <linearGradient id="drop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B4332"/>
+      <stop offset="100%" stop-color="#2D6A4F"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E07A3D"/>
+      <stop offset="100%" stop-color="#F4A261"/>
+    </linearGradient>
+  </defs>
+  <!-- Icon: abstract vapor drop -->
+  <g transform="translate(10, 10)">
+    <ellipse cx="50" cy="85" rx="38" ry="8" fill="#1B4332" opacity="0.15"/>
+    <path d="M50 10 C30 40, 25 65, 50 80 C75 65, 70 40, 50 10 Z" fill="url(#drop)"/>
+    <path d="M35 55 Q50 48 65 55" stroke="url(#wave)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M38 65 Q50 58 62 65" stroke="url(#wave)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="120" y="62" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="42" font-weight="700" fill="#1B4332" letter-spacing="4">DAB</text>
+  <text x="120" y="95" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="28" font-weight="400" fill="#E07A3D" letter-spacing="8">LABS</text>
+  <text x="310" y="95" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" font-weight="600" fill="#1B4332" opacity="0.5">AU</text>
+</svg>

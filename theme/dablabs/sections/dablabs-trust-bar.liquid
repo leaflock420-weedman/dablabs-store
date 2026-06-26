@@ -1,0 +1,74 @@
+{{ 'dablabs.css' | asset_url | stylesheet_tag }}
+
+<div class="dl-trust-bar" id="DabLabsTrust-{{ section.id }}">
+  <div class="dl-trust-bar__inner">
+    {%- for block in section.blocks -%}
+      <div class="dl-trust-bar__item" {{ block.shopify_attributes }}>
+        <svg class="dl-trust-bar__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'shipping' -%}
+              <path d="M1 6h15v9H1V6zm15 3h3l3 4v2h-6v-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <circle cx="6" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/>
+            {%- when 'payment' -%}
+              <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2 10h20" stroke="currentColor" stroke-width="1.5"/>
+            {%- when 'australia' -%}
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M8 14c2-3 6-3 8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            {%- else -%}
+              <path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1 3-6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          {%- endcase -%}
+        </svg>
+        <span>{{ block.settings.text }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Dab Labs Trust Bar",
+  "tag": "section",
+  "class": "section-dablabs-trust",
+  "max_blocks": 6,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "payment", "label": "Payment" },
+            { "value": "australia", "label": "Australia" },
+            { "value": "star", "label": "Star" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping over $100"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dab Labs Trust Bar",
+      "blocks": [
+        { "type": "trust_item", "settings": { "icon": "shipping", "text": "Free standard shipping over $100 AUD" } },
+        { "type": "trust_item", "settings": { "icon": "payment", "text": "Afterpay & Zip — pay in 4" } },
+        { "type": "trust_item", "settings": { "icon": "australia", "text": "Shipped from Australia" } },
+        { "type": "trust_item", "settings": { "icon": "star", "text": "Premium Puffco accessories" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
