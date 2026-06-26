@@ -70,10 +70,112 @@ body {
   66% { transform: translate(-20px, 20px) scale(0.95); opacity: 0.6; }
 }
 
-#main, .header, .promo-bar, .footer, .cart-drawer, .cart-overlay, .mobile-drawer {
+#main, .header, .promo-bar, .eofy-banner, .footer, .cart-drawer, .cart-overlay, .mobile-drawer {
   position: relative;
   z-index: 1;
 }
+
+/* EOFY sale banner */
+.eofy-banner {
+  background: linear-gradient(90deg, #c45c00 0%, var(--orange) 35%, #e85d04 65%, #c45c00 100%);
+  background-size: 200% 100%;
+  animation: eofy-shine 4s ease-in-out infinite;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 24px rgba(232, 93, 4, 0.35);
+}
+@keyframes eofy-shine {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.eofy-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 1.2rem;
+  padding: 0.85rem 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+.eofy-banner__tag {
+  background: rgba(0,0,0,0.25);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.eofy-banner__offer {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.eofy-banner__divider { opacity: 0.5; }
+.eofy-banner__timer strong {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  color: #fff8e7;
+  text-shadow: 0 0 12px rgba(255,255,255,0.4);
+}
+.eofy-banner__cta {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.eofy-banner__cta:hover { opacity: 0.9; }
+
+/* Sale pricing */
+.price--was {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.92em;
+}
+.price--now {
+  color: var(--orange);
+  font-weight: 800;
+}
+.sale-active .product-card__price .price--now { color: #ffb347; }
+.pdp__price .price--now { font-size: 1.1em; }
+
+.badge--eofy {
+  background: var(--orange);
+  color: #fff;
+  animation: eofy-pulse 2s ease-in-out infinite;
+}
+.badge--heady { background: var(--purple); color: #fff; }
+@keyframes eofy-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 93, 4, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(232, 93, 4, 0); }
+}
+
+.site-banner__sale {
+  display: inline-block;
+  margin-top: 0.8rem;
+  padding: 0.5rem 1rem;
+  background: rgba(232, 93, 4, 0.2);
+  border: 1px solid rgba(232, 93, 4, 0.45);
+  border-radius: 999px;
+  color: #ffb347;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.site-banner__sale[hidden] { display: none; }
+
+.checkout__total-row--discount {
+  color: var(--orange);
+  font-weight: 600;
+}
+.checkout__total-row--discount span:last-child { color: #6ee7a0; }
+.checkout__total-row--was { color: var(--muted); font-size: 0.95em; }
 
 /* Smooth page transitions */
 .page-view {
@@ -1645,6 +1747,15 @@ input, select { font-family: inherit; }
   .section-head { flex-direction: column; align-items: flex-start; }
   .shop-header { padding: 2rem 1.2rem 0.8rem; }
   .shop-toolbar { padding: 0.8rem 1.2rem 1.6rem; }
+  .eofy-banner__inner {
+    font-size: 1.05rem;
+    gap: 0.4rem 0.8rem;
+    padding: 0.75rem 0.8rem;
+  }
+  .eofy-banner__offer { font-size: 1.15rem; }
+  .eofy-banner__divider,
+  .eofy-banner__cta { display: none; }
+  .eofy-banner__timer strong { font-size: 1.2rem; }
   .pdp { padding: 1.2rem; gap: 2rem; }
   .footer__inner { padding: 3rem 1.2rem 2rem; }
   .footer__cols { grid-template-columns: 1fr; }
@@ -1654,6 +1765,8 @@ input, select { font-family: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .promo-bar__track,
+  .eofy-banner,
+  .badge--eofy,
   .footer__marquee-track,
   .smoke-cloud,
   .site-banner__smoke-img,

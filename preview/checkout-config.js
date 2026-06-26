@@ -27,4 +27,10 @@ window.DABLABS_CHECKOUT = {
 
   paymentInstructions:
     'Your payment is processed securely by PayPal. We will email you when your order ships.',
+
+  sale: {
+    label: 'EOFY SALE',
+    percentOff: 30,
+    endsAt: '2026-06-30T23:59:59+10:00',
+  },
 };

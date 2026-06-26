@@ -5,6 +5,9 @@
   ];
   const DEVICE_TAGS = taxonomy?.deviceTags || ['Peak OG', 'Peak Pro', 'Proxy'];
   const CHECKOUT = window.DABLABS_CHECKOUT || {};
+  const SALE = CHECKOUT.sale || {};
+  const SALE_ENDS = SALE.endsAt ? new Date(SALE.endsAt).getTime() : 0;
+  const SALE_PERCENT = SALE.percentOff ?? 0;
   const FREE_SHIP = CHECKOUT.freeShippingThreshold ?? 100;
   const SHIPPING = {
     standard: CHECKOUT.standardShipping ?? 9.95,
@@ -63,8 +66,39 @@
     return `$${n.toFixed(2)}`;
   }
 
-  function getCartSubtotal() {
+  function pad2(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function isSaleActive() {
+    return SALE_PERCENT > 0 && SALE_ENDS > Date.now();
+  }
+
+  function getEffectivePrice(price) {
+    if (!isSaleActive()) return price;
+    return Math.round(price * (1 - SALE_PERCENT / 100) * 100) / 100;
+  }
+
+  function priceHTML(price, opts = {}) {
+    const suffix = opts.suffix ?? '';
+    if (!isSaleActive()) {
+      return `<span class="price--regular">${formatPrice(price)}</span>${suffix}`;
+    }
+    const sale = getEffectivePrice(price);
+    return `<span class="price--was">${formatPrice(price)}</span> <span class="price--now">${formatPrice(sale)}</span>${suffix}`;
+  }
+
+  function getCartOriginalSubtotal() {
     return cart.reduce((s, i) => s + i.price * i.qty, 0);
+  }
+
+  function getCartSubtotal() {
+    return cart.reduce((s, i) => s + getEffectivePrice(i.price) * i.qty, 0);
+  }
+
+  function getSaleSavings() {
+    if (!isSaleActive()) return 0;
+    return Math.round((getCartOriginalSubtotal() - getCartSubtotal()) * 100) / 100;
   }
 
   function getShippingCost(subtotal = getCartSubtotal()) {
@@ -214,15 +248,21 @@
           <div class="checkout__line-name">${item.name}</div>
           <div class="checkout__line-meta">${item.variant ? `${item.variant} · ` : ''}Qty ${item.qty}</div>
         </div>
-        <div class="checkout__line-price">${formatPrice(item.price * item.qty)}</div>
+        <div class="checkout__line-price">${formatPrice(getEffectivePrice(item.price) * item.qty)}</div>
       </div>`).join('');
 
     const subtotal = getCartSubtotal();
+    const savings = getSaleSavings();
     const shipping = getShippingCost(subtotal);
     const total = subtotal + shipping;
+    const discountRow = savings > 0
+      ? `<div class="checkout__total-row checkout__total-row--discount"><span>${SALE.label || 'Sale'} (${SALE_PERCENT}% off)</span><span>−${formatPrice(savings)}</span></div>`
+      : '';
 
     totals.innerHTML = `
+      ${savings > 0 ? `<div class="checkout__total-row checkout__total-row--was"><span>Was</span><span class="price--was">${formatPrice(getCartOriginalSubtotal())}</span></div>` : ''}
       <div class="checkout__total-row"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>
+      ${discountRow}
       <div class="checkout__total-row"><span>Shipping</span><span>${shipping === 0 ? 'Free' : formatPrice(shipping)}</span></div>
       <div class="checkout__total-row checkout__total-row--grand"><span>Total</span><strong>${formatPrice(total)} AUD</strong></div>`;
 
@@ -246,13 +286,16 @@
         key: i.key,
         slug: i.slug,
         name: i.name,
-        price: i.price,
+        price: getEffectivePrice(i.price),
+        originalPrice: i.price,
         qty: i.qty,
         image: i.image,
         variant: i.variant,
       })),
       subtotal,
       shipping,
+      discount: getSaleSavings(),
+      discountLabel: isSaleActive() ? `${SALE.label || 'Sale'} ${SALE_PERCENT}%` : null,
       total: subtotal + shipping,
       currency: CHECKOUT.currency || 'AUD',
       shippingMethod,
@@ -402,8 +445,9 @@
       createdAt: new Date().toISOString(),
       status: 'pending_payment',
       customer,
-      items: cart.map((i) => ({ ...i })),
+      items: cart.map((i) => ({ ...i, price: getEffectivePrice(i.price) })),
       subtotal,
+      discount: getSaleSavings(),
       shipping,
       total,
       currency: CHECKOUT.currency || 'AUD',
@@ -452,7 +496,8 @@
   function productCardHTML(p, showAtc = true) {
     const badges = [];
     if (p.limited) badges.push('<span class="badge badge--limited">Limited</span>');
-    if (p.price >= 200) badges.push('<span class="badge badge--sale">Heady</span>');
+    if (isSaleActive()) badges.push('<span class="badge badge--eofy">30% OFF</span>');
+    if (p.price >= 200) badges.push('<span class="badge badge--heady">Heady</span>');
     if (p.images.length > 3) badges.push('<span class="badge badge--new">New</span>');
     const variantText = p.variantCount > 0 ? `+ ${p.variantCount} colours` : '';
     return `
@@ -466,7 +511,7 @@
           <h3 class="product-card__title">${p.name}</h3>
           ${variantText ? `<div class="product-card__variants">${variantText}</div>` : ''}
           <div class="product-card__footer">
-            <div class="product-card__price">${formatPrice(p.price)} <small>AUD</small></div>
+            <div class="product-card__price">${priceHTML(p.price, { suffix: ' <small>AUD</small>' })}</div>
             ${showAtc ? `<button class="product-card__atc" data-atc="${p.slug}">Add</button>` : ''}
           </div>
         </div>
@@ -578,13 +623,13 @@
       <div class="pdp__info">
         <div class="pdp__brand">${p.brand}</div>
         <h1 class="pdp__title">${p.name}</h1>
-        <div class="pdp__price">${formatPrice(p.price)} <span>AUD inc. GST</span></div>
+        <div class="pdp__price">${priceHTML(p.price, { suffix: ' <span>AUD inc. GST</span>' })}</div>
         <div class="pdp__tags">
           ${getProductTypeTags(p.collections).map((c) => `<span class="pdp__tag pdp__tag--type">${c}</span>`).join('')}
           ${getDeviceTags(p.collections).length ? `<span class="pdp__tag pdp__tag--fits">Fits ${getDeviceTags(p.collections).join(' · ')}</span>` : ''}
         </div>
         ${swatches}
-        <button class="btn btn--cart" id="pdpAtc">Add to Cart — ${formatPrice(p.price)}</button>
+        <button class="btn btn--cart" id="pdpAtc">Add to Cart — ${formatPrice(getEffectivePrice(p.price))}</button>
         <div class="pdp__trust">
           <div>🚚 AU Shipping</div>
           <div>💳 PayPal checkout</div>
@@ -630,8 +675,11 @@
   function updateCartUI() {
     const count = cart.reduce((s, i) => s + i.qty, 0);
     $('#cartCount').textContent = count;
-    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    $('#cartTotal').textContent = `${formatPrice(subtotal)} AUD`;
+    const subtotal = getCartSubtotal();
+    const savings = getSaleSavings();
+    $('#cartTotal').textContent = savings > 0
+      ? `${formatPrice(subtotal)} AUD (saved ${formatPrice(savings)})`
+      : `${formatPrice(subtotal)} AUD`;
 
     const remaining = Math.max(0, FREE_SHIP - subtotal);
     const pct = Math.min(100, (subtotal / FREE_SHIP) * 100);
@@ -651,7 +699,7 @@
         <div>
           <div class="cart-item__name">${item.name}</div>
           ${item.variant ? `<div class="cart-item__variant">${item.variant}</div>` : ''}
-          <div class="cart-item__price">${formatPrice(item.price)} × ${item.qty}</div>
+          <div class="cart-item__price">${isSaleActive() ? priceHTML(item.price) + ' × ' : formatPrice(item.price) + ' × '}${item.qty}</div>
         </div>
         <button class="cart-item__remove" data-rm="${idx}">×</button>
       </div>`).join('');
@@ -778,7 +826,43 @@
     if (mobileSearch) mobileSearch.value = value;
   }
 
+  function initEofyCountdown() {
+    const banner = $('#eofyBanner');
+    const el = $('#eofyCountdown');
+    const heroSale = $('#heroSaleTag');
+    if (!banner || !el || !SALE_ENDS) return;
+
+    function syncSaleUI() {
+      const active = isSaleActive();
+      banner.hidden = !active;
+      if (heroSale) heroSale.hidden = !active;
+      document.body.classList.toggle('sale-active', active);
+      if (!active) {
+        el.textContent = 'Ended';
+        return false;
+      }
+      return true;
+    }
+
+    function tick() {
+      if (!syncSaleUI()) return;
+      const left = Math.max(0, SALE_ENDS - Date.now());
+      const s = Math.floor(left / 1000);
+      const d = Math.floor(s / 86400);
+      const h = Math.floor((s % 86400) / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      el.textContent = d > 0
+        ? `${d}d ${pad2(h)}h ${pad2(m)}m ${pad2(sec)}s`
+        : `${pad2(h)}h ${pad2(m)}m ${pad2(sec)}s`;
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  }
+
   // Init
+  initEofyCountdown();
   renderNav();
   renderCatTiles();
   renderGrid($('#limitedGrid'), getLimited().length ? getLimited() : products.slice(0, 4));
