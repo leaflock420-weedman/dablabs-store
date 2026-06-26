@@ -144,12 +144,16 @@ function buildPurchaseUnit(order) {
         country_code: 'AU',
       },
     } : undefined,
+    payment_instruction: {
+      disbursement_mode: 'INSTANT',
+    },
   };
 }
 
 async function createPayPalOrder(order) {
   const body = {
     intent: 'CAPTURE',
+    processing_instruction: 'ORDER_COMPLETE_ON_PAYMENT_APPROVAL',
     purchase_units: [buildPurchaseUnit(order)],
     application_context: {
       brand_name: 'Dab Labs',
